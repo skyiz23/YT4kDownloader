@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fast video and audio downloader with up to 4K MP4 downloads.">
+  <title>YT 4K Downloader — Video & Audio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <nav>
+      <div class="brand"><span class="logo">4K</span> YT 4K Downloader</div>
+      <span class="badge">VIDEO + AUDIO</span>
+    </nav>
+
+    <section class="hero">
+      <p class="eyebrow">SIMPLE • FAST • CLEAN</p>
+      <h1>Download.<br><span>Done.</span></h1>
+      <p class="sub">Paste a video URL, choose what you want, and get a browser-ready file.</p>
+
+      <div class="card">
+        <label for="url">Video URL</label>
+        <div class="input-row">
+          <input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+          <button id="analyze">Analyze</button>
+        </div>
+
+        <div id="preview" class="preview hidden">
+          <img id="thumb" alt="Video thumbnail">
+          <div class="preview-copy">
+            <h3 id="title"></h3>
+            <p id="meta"></p>
+          </div>
+        </div>
+
+        <div class="mode-tabs" role="tablist" aria-label="Download type">
+          <button class="mode active" data-mode="video" type="button">🎬 Video</button>
+          <button class="mode" data-mode="audio" type="button">🎧 Audio only</button>
+        </div>
+
+        <div id="videoControls" class="controls">
+          <div>
+            <label for="quality">Video quality</label>
+            <select id="quality">
+              <option value="2160">4K — 2160p</option>
+              <option value="1440">2K — 1440p</option>
+              <option value="1080" selected>Full HD — 1080p</option>
+              <option value="720">HD — 720p</option>
+              <option value="360">SD — 360p</option>
+            </select>
+          </div>
+          <button id="download" class="primary">Download MP4</button>
+        </div>
+
+        <div id="audioControls" class="controls hidden">
+          <div>
+            <label>Audio format</label>
+            <div class="format-pill">MP3 • 192 kbps</div>
+          </div>
+          <button id="downloadAudio" class="primary">Download MP3</button>
+        </div>
+
+        <div id="statusBox" class="status hidden">
+          <div class="status-line">
+            <span id="statusText">Preparing...</span>
+            <span id="percent">0%</span>
+          </div>
+          <div class="bar"><div id="barFill"></div></div>
+          <div class="stats">
+            <span id="sizeStat">0 MB / —</span>
+            <span id="speedStat">—</span>
+            <span id="etaStat">ETA —</span>
+          </div>
+          <p id="helperText" class="helper">You can leave this tab open while the file is being prepared.</p>
+        </div>
+
+        <div id="result" class="result hidden">
+          <div>
+            <strong>✓ Download ready</strong>
+            <p id="resultTitle"></p>
+          </div>
+          <a id="saveBtn" class="save" href="#">Save file</a>
+        </div>
+
+        <p id="error" class="error hidden"></p>
+      </div>
+    </section>
+
+    <section class="features">
+      <div><b>01</b><h3>Paste a URL</h3><p>Drop in the video link and let the site read the title and thumbnail.</p></div>
+      <div><b>02</b><h3>Pick your format</h3><p>Download up to 4K video or switch to audio-only MP3.</p></div>
+      <div><b>03</b><h3>Track progress</h3><p>See percentage, downloaded MB, speed and estimated time remaining.</p></div>
+    </section>
+
+    <footer>
+      Use only with content you own or have permission to download. Availability and quality depend on the source.
+    </footer>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
