@@ -33,7 +33,11 @@ YT_DLP_COMMON = {
     "extractor_args": {
         "youtubepot-bgutilhttp": {
             "base_url": [os.getenv("YTDL_POT_PROVIDER_URL", "http://127.0.0.1:4416")]
-        }
+        },
+        # Prefer clients that are currently less dependent on the web bot checks.
+        "youtube": {
+            "player_client": ["android_vr", "web"]
+        },
     },
     "retries": 5,
     "fragment_retries": 5,
@@ -197,10 +201,25 @@ def download_job(job_id, url, quality, mode):
         )
         options = {k: v for k, v in options.items() if v is not None}
 
-        with yt_dlp.YoutubeDL(options) as ydl:
-            info = ydl.extract_info(url, download=True)
-            title = info.get("title", "download")
-            duration = info.get("duration") or 0
+        try:
+            with yt_dlp.YoutubeDL(options) as ydl:
+                info = ydl.extract_info(url, download=True)
+        except yt_dlp.utils.DownloadError as first_error:
+            # YouTube can reject one client while another remains available.
+            # Retry once with the embedded client, which does not currently
+            # require a GVS PO token, but only exposes videos that are embeddable.
+            fallback = make_yt_options(**{k: v for k, v in options.items() if k != "extractor_args"})
+            fallback["extractor_args"] = {
+                "youtube": {"player_client": ["web_embedded"]},
+            }
+            try:
+                with yt_dlp.YoutubeDL(fallback) as ydl:
+                    info = ydl.extract_info(url, download=True)
+            except Exception:
+                raise first_error
+
+        title = info.get("title", "download")
+        duration = info.get("duration") or 0
 
         candidates = [
             os.path.join(DOWNLOAD_DIR, x)
