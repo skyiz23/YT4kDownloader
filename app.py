@@ -27,13 +27,16 @@ QUALITY_MAP = {
 # YouTube extraction currently requires yt-dlp's external JS challenge solver.
 # Deno is installed by the Dockerfile and enabled explicitly here.
 YT_DLP_COMMON = {
-    # Deno is supplied by the official denoland/deno Docker image.
     "js_runtimes": {"deno": {}},
-    # Allow yt-dlp to fetch its EJS challenge-solver components.
     "remote_components": {"ejs": ["npm"]},
+    # BgUtils supplies YouTube Proof-of-Origin tokens on Render/cloud IPs.
+    "extractor_args": {
+        "youtubepot-bgutilhttp": {
+            "base_url": [os.getenv("YTDL_POT_PROVIDER_URL", "http://127.0.0.1:4416")]
+        }
+    },
     "retries": 5,
     "fragment_retries": 5,
-    "extractor_retries": 3,
     "socket_timeout": 30,
 }
 
